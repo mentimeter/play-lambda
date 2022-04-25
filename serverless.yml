@@ -1,0 +1,22 @@
+service: play-lambda-runner
+
+frameworkVersion: "^3.16"
+
+package:
+  excludeDevDependencies: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  memorySize: 4096
+  iamBucketReplace: true
+  tags:
+    datadog: monitored
+
+functions:
+  play-lambda-run:
+    handler: play-lambda-runner.handler
+    timeout: 300
+    ephemeralStorageSize: 1024

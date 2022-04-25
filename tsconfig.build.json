@@ -1,0 +1,23 @@
+{
+  "include": ["src"],
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+
+    "**/__test__",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.tsx",
+    "**/*.spec.tsx",
+    "**/*.test.js",
+    "**/*.spec.js"
+  ],
+  "compilerOptions": {
+    "noEmit": false,
+    "target": "ES2019",
+    "module": "commonjs",
+    "outDir": "dist",
+    "emitDeclarationOnly": false
+  },
+  "compileOnSave": true
+}

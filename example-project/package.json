@@ -1,0 +1,10 @@
+{
+  "name": "example-e2e-project",
+  "version": "1.0.0",
+  "dependencies": {
+    "@playwright/test": "^1.21.1"
+  },
+  "devDependencies": {
+    "@mentimeter/play-lambda": "workspace:^"
+  }
+}

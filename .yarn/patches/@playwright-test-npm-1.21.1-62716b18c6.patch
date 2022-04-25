@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 5a5f8e6e996abff5c44a85ebd957537b3037502f..fe2790a0780561190b2ede50a4aa185e7a8bc770 100644
+--- a/package.json
++++ b/package.json
+@@ -19,6 +19,7 @@
+     "./lib/experimentalLoader": "./lib/experimentalLoader.js",
+     "./lib/mount": "./lib/mount.js",
+     "./lib/ci": "./lib/ci.js",
++    "./lib/runner": "./lib/runner.js",
+     "./reporter": "./reporter.js"
+   },
+   "bin": {

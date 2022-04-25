@@ -1,0 +1,18 @@
+{
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+
+    "**/__test__",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.tsx",
+    "**/*.spec.tsx",
+    "**/*.test.js",
+    "**/*.spec.js"
+  ],
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "dist"
+  }
+}
