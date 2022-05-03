@@ -11,10 +11,10 @@ import type {
   Reporter,
   Suite,
   TestCase,
-} from "@playwright/test/reporter";
+} from "@mentimeter/playwright-test/reporter";
 import dotenv from "dotenv";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { Runner } from "@playwright/test/lib/runner";
+import { Runner } from "@mentimeter/playwright-test/lib/runner";
 import { register } from "esbuild-register/dist/node";
 import { extractResults } from "./resultParsing";
 import { findTests } from "./findTests";
@@ -137,7 +137,7 @@ export function prepareConfig(
 
 export function configToConfigFile(config: { default: any }): string {
   let configString = `import chromium from 'chrome-aws-lambda';
-  import type { PlaywrightTestConfig } from '@playwright/test';
+  import type { PlaywrightTestConfig } from '@mentimeter/playwright-test';
 
   const config: PlaywrightTestConfig = ${inspect(
     config.default,

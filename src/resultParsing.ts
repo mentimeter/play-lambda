@@ -3,7 +3,10 @@ import { createWriteStream, mkdirSync } from "fs";
 import { dirname, basename } from "path";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import type { InvokeCommandOutput } from "@aws-sdk/client-lambda";
-import type { TestCase, TestResult } from "@playwright/test/reporter";
+import type {
+  TestCase,
+  TestResult,
+} from "@mentimeter/playwright-test/reporter";
 
 export interface PlaywrightStatus {
   success: boolean;
