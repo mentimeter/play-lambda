@@ -6,11 +6,7 @@ import { exec } from "child_process";
 const serverlessVersion = "3.16";
 
 function srcDir(): string {
-  if (__dirname.includes("dist")) {
-    return path.join(__dirname, "..", "..");
-  } else {
-    return path.join(__dirname, "..");
-  }
+  return path.join(__dirname, "..");
 }
 
 export async function deploy(args: any) {

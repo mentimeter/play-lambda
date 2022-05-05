@@ -1,12 +1,13 @@
 {
   "name": "@mentimeter/play-lambda",
-  "version": "1.0.11",
+  "version": "1.0.15",
   "description": "Runs playwright tests in lambda functions",
   "bin": "./cli.js",
   "sideEffects": false,
   "scripts": {
     "test": "run -T jest",
-    "postinstall": "node patch-playwright-export.js"
+    "postinstall": "node patch-playwright-export.js",
+    "publish": "rm -rf dist && yarn tsc && yarn npm publish --tag latest"
   },
   "files": [
     "cli.js",
