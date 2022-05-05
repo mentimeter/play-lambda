@@ -1,6 +1,6 @@
 import path from "path";
 import { TextEncoder } from "util";
-import type { Reporter } from "@mentimeter/playwright-test/reporter";
+import type { Reporter } from "@playwright/test/reporter";
 import type { TestConfig } from "./testCommand";
 import { runTests } from "./testCommand";
 import {

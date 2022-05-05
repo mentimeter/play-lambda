@@ -1,10 +1,10 @@
 import { execSync } from "child_process";
-import type { Suite, TestCase } from "@mentimeter/playwright-test/reporter";
+import type { Suite, TestCase } from "@playwright/test/reporter";
 import type {
   Project,
   PlaywrightTestOptions,
   PlaywrightWorkerOptions,
-} from "@mentimeter/playwright-test";
+} from "@playwright/test";
 import type { SuiteInfo, TestConfig } from "./testCommand";
 
 export async function findTests(config: TestConfig): Promise<SuiteInfo> {

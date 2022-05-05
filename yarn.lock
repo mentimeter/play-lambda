@@ -2175,8 +2175,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-lambda": ^3.48.0
     "@aws-sdk/client-s3": ^3.48.0
-    "@mentimeter/playwright-test": 1.21.3
-    "@playwright/test": ^1.21
+    "@playwright/test": 1.21.1
     "@types/argparse": ^2.0.10
     "@types/jest": ^27
     "@types/node": ^17.0.31
@@ -2187,24 +2186,12 @@ __metadata:
     glob: ^7.2.0
     jest: ^28
     mime-types: ^2.1.34
-    playwright-core: 1.21.1
     ts-jest: ^28.0.0
     typescript: ^4.6.2
   bin:
     play-lambda: ./cli.js
   languageName: unknown
   linkType: soft
-
-"@mentimeter/playwright-test@npm:1.21.3":
-  version: 1.21.3
-  resolution: "@mentimeter/playwright-test@npm:1.21.3"
-  dependencies:
-    playwright-core: 1.21.1
-  bin:
-    playwright: cli.js
-  checksum: 3f7d407d1d5bbed12ade533d4d2fb85a4dddca2cf283220f9d8f4fb23e8aeb08cea2fdb2be84cd5eed96e613302e8302d82172b1db2233e4d8295ca0f3385d44
-  languageName: node
-  linkType: hard
 
 "@npmcli/fs@npm:^2.1.0":
   version: 2.1.0
@@ -2226,7 +2213,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.21":
+"@playwright/test@npm:1.21.1":
   version: 1.21.1
   resolution: "@playwright/test@npm:1.21.1"
   dependencies:
