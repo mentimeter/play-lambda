@@ -31,7 +31,7 @@ parser_test.add_argument("-s", "--runner-stage", {
   choices: RUNNER_STAGES,
   default: "prod",
 });
-parser_test.add_argument("testFile", { nargs: "?", default: "tests" });
+parser_test.add_argument("filePatterns", { nargs: "*", default: ["tests"] });
 
 if (process.argv.length < 3) {
   parser.print_help();

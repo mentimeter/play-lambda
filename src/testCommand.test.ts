@@ -21,7 +21,7 @@ describe("config manipulation", () => {
     "lambda.config.ts"
   );
   const playLambdaConfig: TestConfig = {
-    fileNameSearch: "",
+    filePatterns: [],
     testListOverride: listExampleProject,
     runsPerTest: 1,
     configFilename: "lambda.config.ts",
@@ -85,7 +85,7 @@ describe("play-lambda test command", () => {
     });
 
     config = {
-      fileNameSearch: "",
+      filePatterns: [],
       testListOverride: listExampleProject,
       runsPerTest: 1,
       configFilename: "lambda.config.ts",

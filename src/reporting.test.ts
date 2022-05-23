@@ -49,7 +49,7 @@ describe("playwright reporting", () => {
     };
 
     config = {
-      fileNameSearch: "",
+      filePatterns: [],
       testListOverride: listExampleProject,
       runsPerTest: 1,
       configFilename: "lambda.config.ts",
