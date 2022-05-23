@@ -15,7 +15,7 @@ export async function findTests(config: TestConfig): Promise<SuiteInfo> {
   } else {
     // This doesn't like to be run from within jest, hence the override
     pwListRaw = execSync(
-      `npx playwright test --list --reporter json ${config.fileNameSearch}`,
+      `npx playwright test --list --reporter json ${config.filePatterns.join(" ")}`,
       {
         cwd: config.testPackageDirectory,
         input: "",

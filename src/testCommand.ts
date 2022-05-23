@@ -23,7 +23,7 @@ import { findTests } from "./findTests";
 dotenv.config();
 
 export interface TestConfig {
-  fileNameSearch: string;
+  filePatterns: string[];
   runsPerTest: number;
   configFilename: string;
   testPackageDirectory: string;
@@ -347,7 +347,7 @@ export async function runTests(
 export async function testCommand(args: any) {
   const times = args.times;
   const configFile = args.config;
-  const testFile = args.testFile;
+  const filePatterns = args.filePatterns;
   const runnerStage = args.runnerStage;
 
   const lambdaConfig: LambdaClientConfig = { region: "us-east-1" };
@@ -364,7 +364,7 @@ export async function testCommand(args: any) {
 
   const lambdaClient = new LambdaClient(lambdaConfig);
   const testConfig: TestConfig = {
-    fileNameSearch: testFile,
+    filePatterns,
     runsPerTest: times,
     configFilename: configFile,
     testPackageDirectory: process.cwd(),

@@ -8,7 +8,7 @@ import { listExampleProject } from "./mocks/listProjectMock";
 import type { TestConfig } from "./testCommand";
 
 const defaultConfig: TestConfig = {
-  fileNameSearch: "",
+  filePatterns: [],
   runsPerTest: 1,
   configFilename: "dontcare",
   testPackageDirectory: "dontcare",

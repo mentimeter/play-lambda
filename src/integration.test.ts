@@ -15,7 +15,7 @@ describe("play-lambda integration suite", () => {
     const exampleDir = path.join(__dirname, "..", "example-project");
     const lambdaClient = new LambdaClient({ region: "us-east-1" });
     const testConfig: TestConfig = {
-      fileNameSearch: "",
+      filePatterns: [],
       testListOverride: listExampleProject,
       runsPerTest: 1,
       configFilename: "lambda.config.ts",
