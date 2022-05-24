@@ -1,6 +1,6 @@
 {
   "name": "@mentimeter/play-lambda",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Runs playwright tests in lambda functions",
   "bin": "./cli.js",
   "sideEffects": false,
