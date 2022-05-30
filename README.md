@@ -56,4 +56,4 @@ PLAY_LAMBDA_INTEGRATION=any yarn test
 
 1. Set the version in package.json and commit
 1. `export NPM_TOKEN=secret`
-1. `yarn npm publish --tag version-you-set`
+1. `yarn publish`
