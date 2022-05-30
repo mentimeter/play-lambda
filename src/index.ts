@@ -5,6 +5,7 @@ import { testCommand } from "./testCommand";
 const RUNNER_STAGES = ["dev", "prod"];
 
 const parser = new ArgumentParser({
+  prog: "play-lambda",
   description: "Run tests in AWS lambda",
   add_help: true,
 });

@@ -18,16 +18,38 @@ export async function deploy(args: any) {
     await fs.mkdir(tmpDir);
   }
 
-  await createPackageJson(tmpDir);
-  await copyServerlessConfig(tmpDir);
-  // We used to run a npm install here, but the serverless cli takes care of that for us
+  try {
+    await createPackageJson(tmpDir);
+    await copyServerlessConfig(tmpDir);
+  } catch (e) {
+    console.error(
+      `failed to create installation directory for play-lambda, ${e}`,
+      e
+    );
+    process.exit(1);
+  }
+
+  console.log("Installing play-lambda function dependencies");
+
+  try {
+    await execCmd(`npm install --production`, { cwd: tmpDir });
+  } catch (e) {
+    console.error(`failed to install play-lambda dependencies: ${e}`, e);
+    process.exit(1);
+  }
 
   console.log("Deploying play-runner lambda function");
-  // TODO: pipe stdout in real-time
-  const deployResult = await execCmd(
-    `npx serverless@${serverlessVersion} deploy --stage ${args.stage}`,
-    { cwd: tmpDir }
-  );
+  let deployResult;
+  try {
+    deployResult = await execCmd(
+      `npx serverless@${serverlessVersion} deploy --stage ${args.stage}`,
+      { cwd: tmpDir }
+    );
+  } catch (e) {
+    console.error(`failed to deploy play-lambda with serverless cli: ${e}`, e);
+    process.exit(1);
+  }
+
   console.log(deployResult);
 }
 
