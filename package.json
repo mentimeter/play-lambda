@@ -19,11 +19,11 @@
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.48.0",
     "@aws-sdk/client-s3": "^3.48.0",
-    "@playwright/test": "1.21.1",
+    "@playwright/test": "^1.23.0",
     "argparse": "^2.0.1",
     "dotenv": "^16.0.0",
-    "esbuild-register": "^3.1.2",
     "esbuild": "^0.14.14",
+    "esbuild-register": "^3.1.2",
     "glob": "^7.2.0",
     "mime-types": "^2.1.34"
   },
