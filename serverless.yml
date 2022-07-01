@@ -10,7 +10,7 @@ provider:
   runtime: nodejs14.x
   stage: dev
   region: us-east-1
-  memorySize: 4096
+  memorySize: 2048
   iamBucketReplace: true
   tags:
     datadog: monitored
