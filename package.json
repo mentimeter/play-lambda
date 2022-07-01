@@ -1,6 +1,6 @@
 {
   "name": "@mentimeter/play-lambda",
-  "version": "1.0.18",
+  "version": "1.23.1",
   "description": "Runs playwright tests in lambda functions",
   "bin": "./cli.js",
   "sideEffects": false,
@@ -19,7 +19,7 @@
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.48.0",
     "@aws-sdk/client-s3": "^3.48.0",
-    "@playwright/test": "^1.23.0",
+    "@playwright/test": "1.23.1",
     "argparse": "^2.0.1",
     "dotenv": "^16.0.0",
     "esbuild": "^0.14.14",
