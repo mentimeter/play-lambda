@@ -275,9 +275,8 @@ export async function runTests(
       .titlePath()
       .filter((x) => x)
       .join(" ");
-    // Direct "[]()" usage in the playwright "grep" string need escaping,
-    // otherwise the result is "no tests found" because it's interpreted as a capture group
-    const escapedGrep = searchTerm.replace(/([\[\]\(\)])/g, "\\$1");
+    // Escape special characters which might break "--grep" or the shell command
+    const escapedGrep = searchTerm.replace(/[[\]()"]/g, "\\$&");
     const lambdaRequestArgs = {
       command: `node node_modules/playwright-core/cli.js test --grep="${escapedGrep}" --config ${config.configFilename} --reporter json ${test.location.file}`,
       files,
