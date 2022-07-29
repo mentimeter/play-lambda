@@ -276,7 +276,7 @@ export async function runTests(
       .filter((x) => x)
       .join(" ");
     // Escape special characters which might break "--grep" or the shell command
-    const escapedGrep = searchTerm.replace(/[[\]()"]/g, "\\$&");
+    const escapedGrep = searchTerm.replace(/[[\]()".+*?\^${}|\\]/g, "\\$&");
     const lambdaRequestArgs = {
       command: `node node_modules/playwright-core/cli.js test --grep="${escapedGrep}" --config ${config.configFilename} --reporter json ${test.location.file}`,
       files,
