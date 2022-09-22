@@ -13,14 +13,25 @@ export async function findTests(config: TestConfig): Promise<SuiteInfo> {
   if (config.testListOverride) {
     pwListRaw = config.testListOverride;
   } else {
-    // This doesn't like to be run from within jest, hence the override
-    pwListRaw = execSync(
-      `npx playwright test --list --reporter json ${config.filePatterns.join(" ")}`,
-      {
-        cwd: config.testPackageDirectory,
-        input: "",
-      }
-    ).toString();
+    try {
+      // This doesn't like to be run from within jest, hence the override
+      pwListRaw = execSync(
+        `npx playwright test --list --reporter json ${config.filePatterns.join(
+          " "
+        )}`,
+        {
+          cwd: config.testPackageDirectory,
+          input: "",
+        }
+      ).toString();
+    } catch (error) {
+      console.log(
+        `Could not find any tests that match: ${config.filePatterns}`
+      );
+      throw new Error(
+        `Command failed: npx playwright test --list --reporter json ${config.filePatterns}`
+      );
+    }
   }
 
   const allTests: TestCase[] = [];
