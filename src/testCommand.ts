@@ -377,7 +377,7 @@ export async function testCommand(args: any) {
     const success = await runTests(testConfig, lambdaClient, reporter);
 
     if (!success) {
-      process.exitCode = 1;
+      process.exitCode = 42;
     }
   } catch (e) {
     if (e.$response?.statusCode === 403) {
