@@ -1,6 +1,6 @@
 {
   "name": "@mentimeter/play-lambda",
-  "version": "1.23.2-canary.3",
+  "version": "1.23.2-canary.4",
   "description": "Runs playwright tests in lambda functions",
   "bin": "./cli.js",
   "sideEffects": false,
