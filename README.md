@@ -6,7 +6,7 @@ This library provides a way of deploying a lambda function that can run playwrig
 
 It's good if you have your e2e tests in a dedicated package where you can add `play-lambda` as a dependency. It might look like the `example-project` folder in this repo.
 
-**Disclaimer:** `play-lambda` currently does _not_ have an active maintenence policy. We attempt keep `play-lambda` up to date with the latest version of `@playwright/test`. We rely on playwright internals to be able to run reporters correctly - and cannot guarantee that future versions of playwright won't break this.
+**Disclaimer:** `play-lambda` currently does _not_ have an active maintenance policy. We attempt to keep `play-lambda` up to date with the latest version of `@playwright/test`. We rely on playwright internals to be able to run reporters correctly - and cannot guarantee that future versions of playwright won't break this.
 
 ## Deploying the `runner` lambda
 
