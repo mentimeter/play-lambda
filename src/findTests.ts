@@ -161,6 +161,7 @@ function getSuites(
               titlePath: () => {
                 return [...titles, childListSuite.title, childSpec.title];
               },
+              id: 'whatever',
             };
             for (const list of [...testLists, childTests]) {
               list.push(test);
