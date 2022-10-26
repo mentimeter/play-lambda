@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import { dirname } from "path";
 import type { Suite, TestCase } from "@playwright/test/reporter";
 import type {
   Project,
@@ -84,6 +85,9 @@ export async function findTests(config: TestConfig): Promise<SuiteInfo> {
   );
   mainSuite.suites = suites;
 
+  //@ts-expect-error playwright reporters expect a _configDir on the config object
+  suiteInfo.config._configDir = dirname(config.configFilename);
+
   // It's fun to let the user know that we are using lots of lambda functions!
   rootConfig.workers = allTests.length;
   listOutput.config.workers = allTests.length;
@@ -161,7 +165,7 @@ function getSuites(
               titlePath: () => {
                 return [...titles, childListSuite.title, childSpec.title];
               },
-              id: 'whatever',
+              id: "whatever",
             };
             for (const list of [...testLists, childTests]) {
               list.push(test);
