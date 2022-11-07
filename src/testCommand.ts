@@ -254,13 +254,11 @@ export async function runTests(
     ).toString("base64"),
   });
 
-  const env: any = {
-    ENV: process.env.ENV ?? "stage",
-  };
+  const env: any = { ENV: process.env.ENV ?? "stage" };
 
-  if (process.env.PLAY_LAMBDA_TRACE_BUCKET) {
-    env.PLAY_LAMBDA_TRACE_BUCKET = process.env.PLAY_LAMBDA_TRACE_BUCKET;
-  }
+  Object.keys(process.env)
+    .filter((key) => key.startsWith("E2E_") || key.startsWith("PLAY_LAMBDA_"))
+    .map((filteredKey) => (env[filteredKey] = process.env[filteredKey]));
 
   const suiteInfo = await findTests(config);
 

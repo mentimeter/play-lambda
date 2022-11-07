@@ -35,6 +35,10 @@ optional arguments:
   -s {dev,prod}, --runner-stage {dev,prod}
 ```
 
+### Exposed environment variables
+
+Use `E2E_` or `PLAY_LAMBDA_` prefix to your environment variables if you want them to be exposed to the running lambda function.
+
 ## Known limitations:
 
 - Only one test can run per lambda function - once the chromium browser is closed, starting a new one normally results in errors.

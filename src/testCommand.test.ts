@@ -157,6 +157,26 @@ describe("play-lambda test command", () => {
       });
     });
   });
+
+  it("sends along env variables prefixed with E2E_ or PLAY_LAMBDA_", async () => {
+    process.env.E2E_ANYTHING = "hejhej";
+    process.env.PLAY_LAMBDA_ANYTHING = "hejhå";
+
+    await runTests(config, lambdaClient, muteReporter);
+
+    let env = getSentEnv(lambdaClient);
+    expect(env[0].E2E_ANYTHING).toEqual("hejhej");
+    expect(env[0].PLAY_LAMBDA_ANYTHING).toEqual("hejhå");
+  });
+
+  it("does not sends along other standard env variables", async () => {
+    process.env.HOME = "/anything/";
+
+    await runTests(config, lambdaClient, muteReporter);
+
+    let env = getSentEnv(lambdaClient);
+    expect(env[0].HOME).toBeUndefined();
+  });
 });
 
 function getSentCommands(lambdaMock: LambdaMockT) {
@@ -181,6 +201,18 @@ function getSentFiles(lambdaMock: LambdaMockT) {
   }
 
   return files;
+}
+
+function getSentEnv(lambdaMock: LambdaMockT): any {
+  const env = [];
+  for (const call of lambdaMock.send.mock.calls) {
+    const payload = call[0].input.Payload;
+    const payloadString = new TextDecoder().decode(payload);
+    const parsedPayload = JSON.parse(payloadString);
+    env.push(parsedPayload.env);
+  }
+
+  return env;
 }
 
 export {};
