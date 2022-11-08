@@ -4,7 +4,8 @@
   "description": "Runs playwright tests in lambda functions",
   "bin": "./cli.js",
   "exports": {
-    "./download-reporter": "./dist/reporters/downloadTraceReporter.js"
+    "./download-reporter": "./dist/reporters/downloadTraceReporter.js",
+    "./log-reporter": "./dist/reporters/logReporter.js"
   },
   "sideEffects": false,
   "scripts": {
