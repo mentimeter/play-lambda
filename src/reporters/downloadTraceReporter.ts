@@ -8,7 +8,8 @@ export class DownloadTraceReporter implements Reporter {
   bucket: string;
 
   constructor() {
-    this.s3 = new S3Client({ region: "us-east-1" });
+    const awsRegion = process.env.PLAY_LAMBDA_AWS_REGION ?? "us-east-1";
+    this.s3 = new S3Client({ region: awsRegion });
     this.bucket = process.env.PLAY_LAMBDA_TRACE_BUCKET;
   }
 

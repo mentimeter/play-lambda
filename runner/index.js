@@ -62,7 +62,9 @@ async function uploadAttachments(attachments) {
     return;
   }
 
-  const s3 = new S3Client({ region: "us-east-1" });
+  const awsRegion = process.env.PLAY_LAMBDA_AWS_REGION ?? "us-east-1";
+
+  const s3 = new S3Client({ region: awsRegion });
   const bucket = process.env.PLAY_LAMBDA_TRACE_BUCKET;
 
   // Upload attachments in parallel, some are ~8MB large
