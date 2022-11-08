@@ -3,6 +3,9 @@
   "version": "1.27.3",
   "description": "Runs playwright tests in lambda functions",
   "bin": "./cli.js",
+  "exports": {
+    "./download-reporter": "./dist/reporters/downloadTraceReporter.js"
+  },
   "sideEffects": false,
   "scripts": {
     "test": "run -T jest",

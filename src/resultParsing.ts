@@ -4,6 +4,7 @@ import { dirname, basename } from "path";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import type { InvokeCommandOutput } from "@aws-sdk/client-lambda";
 import type { TestCase, TestResult } from "@playwright/test/reporter";
+import path from "path";
 
 export interface PlaywrightStatus {
   success: boolean;
@@ -86,15 +87,8 @@ export async function extractResults(
     for (const test of tests) {
       statuses.push(test.status);
 
-      if (
-        test.results.some((r: TestResult) => r.attachments) &&
-        fullResponseObject.attachments
-      ) {
-        await downloadAttachments(
-          test,
-          fullResponseObject.attachments,
-          repeatIndex
-        );
+      if (fullResponseObject.attachments) {
+        replaceAttachmentPaths(fullResponseObject.attachments, test.results);
       }
 
       if (test.status !== "skipped") {
@@ -212,4 +206,17 @@ async function downloadAttachments(
       );
     })
   );
+}
+
+function replaceAttachmentPaths(bucketAttachments, results) {
+  for (const result of results) {
+    for (const resultAttachment of result.attachments) {
+      const bucketAttachment = bucketAttachments.find(
+        (att) => att.file === resultAttachment.path
+      );
+      if (bucketAttachment) {
+        resultAttachment.path = bucketAttachment.bucketKey;
+      }
+    }
+  }
 }

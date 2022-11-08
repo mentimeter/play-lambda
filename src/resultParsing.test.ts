@@ -1,14 +1,16 @@
 import { TextEncoder } from "util";
 import { extractResults } from "./resultParsing";
+import { failedTestObject } from "./mocks/failedTest";
 import {
   editorHotkeyAttachmentFailure,
   onlySkippedTests,
 } from "./mocks/resultParsingResponseMocks";
+import { InvokeCommandOutput } from "@aws-sdk/client-lambda";
 
 describe("lambda response parsing", () => {
-  const makeResponse = (payload: string) => {
+  const makeResponse = (payload: string): InvokeCommandOutput => {
     return {
-      $metadata: undefined,
+      $metadata: {},
       FunctionError: undefined,
       LogResult: undefined,
       Payload: new TextEncoder().encode(payload),
@@ -31,5 +33,17 @@ describe("lambda response parsing", () => {
 
     expect(results).toHaveLength(1);
     expect(results[0].status).toBe("skipped");
+  });
+
+  it("sets attachment paths = bucketKey", async () => {
+    const results = await extractResults(
+      makeResponse(JSON.stringify(failedTestObject)),
+      0
+    );
+
+    expect(results).toHaveLength(3);
+    expect(results[0].attachments[0].path).toBe(
+      "2022-11-08T09:02:07.559Z-bad8abe7ce527f7d1443/test-results/tests-radioheadWikipedia-wikipedia-radiohead-searching-for-radiohead-takes-us-to-their-page/trace.zip"
+    );
   });
 });

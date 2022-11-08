@@ -48,12 +48,11 @@ function getAttachments(runDir) {
 
   const files = glob.sync(globDir, { nodir: true });
   const randomChars = crypto.randomBytes(10).toString("hex");
-  const bucketDirName = `${new Date().toISOString()}-${randomChars}`;
   return files.map((f) => {
-    const shortFilePath = f.replace(`${runDir}/`, "");
+    const filePath = f.replace(`${runDir}/`, "");
     return {
       file: f,
-      bucketKey: `${bucketDirName}/${shortFilePath}`,
+      bucketKey: `${path.dirname(filePath)}-${randomChars}/${path.basename(filePath)}`,
     };
   });
 }
