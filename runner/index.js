@@ -48,12 +48,11 @@ function getAttachments(runDir) {
 
   const files = glob.sync(globDir, { nodir: true });
   const randomChars = crypto.randomBytes(10).toString("hex");
-  const bucketDirName = `${new Date().toISOString()}-${randomChars}`;
   return files.map((f) => {
-    const shortFilePath = f.replace(`${runDir}/`, "");
+    const filePath = f.replace(`${runDir}/`, "");
     return {
       file: f,
-      bucketKey: `${bucketDirName}/${shortFilePath}`,
+      bucketKey: `${path.dirname(filePath)}-${randomChars}/${path.basename(filePath)}`,
     };
   });
 }
@@ -63,7 +62,9 @@ async function uploadAttachments(attachments) {
     return;
   }
 
-  const s3 = new S3Client({ region: "us-east-1" });
+  const awsRegion = process.env.PLAY_LAMBDA_AWS_REGION ?? "us-east-1";
+
+  const s3 = new S3Client({ region: awsRegion });
   const bucket = process.env.PLAY_LAMBDA_TRACE_BUCKET;
 
   // Upload attachments in parallel, some are ~8MB large

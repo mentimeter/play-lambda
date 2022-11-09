@@ -1,8 +1,12 @@
 {
   "name": "@mentimeter/play-lambda",
-  "version": "1.27.3",
+  "version": "1.27.4",
   "description": "Runs playwright tests in lambda functions",
   "bin": "./cli.js",
+  "exports": {
+    "./download-reporter": "./dist/reporters/downloadTraceReporter.js",
+    "./log-reporter": "./dist/reporters/logReporter.js"
+  },
   "sideEffects": false,
   "scripts": {
     "test": "run -T jest",

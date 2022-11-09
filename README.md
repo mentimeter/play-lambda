@@ -14,7 +14,7 @@ It's good if you have your e2e tests in a dedicated package where you can add `p
 
 `play-lambda` assumes that you have your aws credentials set up correctly!
 
-You can optionally set the `PLAY_LAMBDA_TRACE_BUCKET` environment variable to configure the lambda to upload report results to a bucket aws bucket of your choice.
+You can optionally set the `PLAY_LAMBDA_TRACE_BUCKET` and `PLAY_LAMBDA_AWS_REGION` environment variables to configure the lambda to upload report results to a bucket aws bucket of your choice.
 
 ## Running your tests
 
@@ -34,6 +34,12 @@ optional arguments:
   -r TIMES, --repeat-each TIMES
   -s {dev,prod}, --runner-stage {dev,prod}
 ```
+
+### Reporters
+
+`download-reporter` implements a Playwright reporter which downloads the attachments from each lambda function into the `test-results` directory, so that they can be inspected with the Playwright Trace Viewer.
+
+`log-reporter` outputs a link for each attachment to the corresponding file in S3. It requires `PLAY_LAMBDA_TRACE_BUCKET` to be set.
 
 ### Exposed environment variables
 

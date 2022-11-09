@@ -4,6 +4,7 @@ import { dirname, basename } from "path";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import type { InvokeCommandOutput } from "@aws-sdk/client-lambda";
 import type { TestCase, TestResult } from "@playwright/test/reporter";
+import path from "path";
 
 export interface PlaywrightStatus {
   success: boolean;
@@ -86,15 +87,8 @@ export async function extractResults(
     for (const test of tests) {
       statuses.push(test.status);
 
-      if (
-        test.results.some((r: TestResult) => r.attachments) &&
-        fullResponseObject.attachments
-      ) {
-        await downloadAttachments(
-          test,
-          fullResponseObject.attachments,
-          repeatIndex
-        );
+      if (fullResponseObject.attachments) {
+        replaceAttachmentPaths(fullResponseObject.attachments, test.results);
       }
 
       if (test.status !== "skipped") {
@@ -145,71 +139,15 @@ function findFirstTests(commandOutput: TestSpecs): any {
   throw new Error(`no tests found in results ${commandOutput}`);
 }
 
-async function downloadAttachments(
-  test: TestCase,
-  attachments: any[],
-  repeatIndex: number
-) {
-  if (!process.env.PLAY_LAMBDA_TRACE_BUCKET) {
-    return;
-  }
-
-  const s3 = new S3Client({ region: "us-east-1" });
-  const lambdaRunDirectory = "/tmp/play-run/";
-  const bucket = process.env.PLAY_LAMBDA_TRACE_BUCKET;
-
-  // Downloads attachments in parallel
-  await Promise.all(
-    test.results.map(async (r) => {
-      if (r.attachments.length === 0) {
-        return;
-      }
-      return Promise.all(
-        r.attachments.map(async (resultAttachment) => {
-          const remoteAttachment = attachments.find(
-            (a) => a.file === resultAttachment.path
-          );
-          if (!remoteAttachment) {
-            // We still want the rest of the result parsing to succeed even if the lambda had problems with this attachment
-            return;
-          }
-
-          resultAttachment.path = resultAttachment.path.replace(
-            lambdaRunDirectory,
-            ""
-          );
-
-          if (repeatIndex > 0) {
-            // test-results/name-of-test-runx/trace.zip
-            resultAttachment.path = `${dirname(
-              resultAttachment.path
-            )}-run${repeatIndex}/${basename(resultAttachment.path)}`;
-          }
-
-          const response = await s3.send(
-            new GetObjectCommand({
-              Bucket: bucket,
-              Key: remoteAttachment.bucketKey,
-            })
-          );
-
-          mkdirSync(dirname(resultAttachment.path), { recursive: true });
-
-          const streamWriter = createWriteStream(resultAttachment.path);
-          //@ts-expect-error Body is a stream
-          response.Body.pipe(streamWriter);
-
-          return new Promise<void>((resolve) => {
-            streamWriter.on("finish", () => {
-              resolve();
-            });
-            streamWriter.on("error", (err) => {
-              console.log(`failed to download ${remoteAttachment}, ${err}`);
-              resolve();
-            });
-          });
-        })
+function replaceAttachmentPaths(bucketAttachments, results) {
+  for (const result of results) {
+    for (const resultAttachment of result.attachments) {
+      const bucketAttachment = bucketAttachments.find(
+        (att) => att.file === resultAttachment.path
       );
-    })
-  );
+      if (bucketAttachment) {
+        resultAttachment.path = bucketAttachment.bucketKey;
+      }
+    }
+  }
 }
