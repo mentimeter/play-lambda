@@ -49,6 +49,7 @@ Use `E2E_` or `PLAY_LAMBDA_` prefix to your environment variables if you want th
 
 - Only one test can run per lambda function - once the chromium browser is closed, starting a new one normally results in errors.
 - Tests can only use one browser context. Starting a second browser context will cause the lambda to crash. This is because lambdas do not allow an arbitrary amounts of processes to start.
+- Node by default sets a concurrent network request limit known as maxSockets. We set maxSockets to a default of 100, which you can further override with `E2E_MAX_SOCKETS`. This sets the number of concurrent requests and additional requests will be queued until a socket becomes available. 
 
 ## Developing `play-lambda`
 
