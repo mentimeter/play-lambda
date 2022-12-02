@@ -7,6 +7,8 @@ const mime = require("mime-types");
 const glob = require("glob");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
+let backupEnv = process.env;
+
 function initRunDir(runDir) {
   fs.mkdirSync(runDir);
   fs.symlinkSync(`${process.cwd()}/node_modules`, `${runDir}/node_modules`);
@@ -20,29 +22,6 @@ function runCmd(command, opts) {
   });
 }
 
-function execErrorResponse(commandDesc, e, attachments = []) {
-  console.log("error:");
-  console.log(util.inspect(e, false, null, false));
-  console.log("attachments:");
-  console.log(util.inspect(attachments, false, null, false));
-
-  let out = "";
-  let err = "";
-  if (e.stdout) {
-    out = e.stdout.toString();
-  }
-  if (e.stderr) {
-    err = e.stderr.toString();
-  }
-
-  return failResponse(
-    `Exec command ${commandDesc} failed: ${e}`,
-    out,
-    err,
-    attachments
-  );
-}
-
 function getAttachments(runDir) {
   const globDir = `${runDir}/test-results/**`;
 
@@ -52,7 +31,9 @@ function getAttachments(runDir) {
     const filePath = f.replace(`${runDir}/`, "");
     return {
       file: f,
-      bucketKey: `${path.dirname(filePath)}-${randomChars}/${path.basename(filePath)}`,
+      bucketKey: `${path.dirname(filePath)}-${randomChars}/${path.basename(
+        filePath
+      )}`,
     };
   });
 }
@@ -91,7 +72,34 @@ async function uploadAttachments(attachments) {
   });
 }
 
+function execErrorResponse(commandDesc, e, attachments = []) {
+  process.env = backupEnv;
+
+  console.log("error:");
+  console.log(util.inspect(e, false, null, false));
+  console.log("attachments:");
+  console.log(util.inspect(attachments, false, null, false));
+
+  let out = "";
+  let err = "";
+  if (e.stdout) {
+    out = e.stdout.toString();
+  }
+  if (e.stderr) {
+    err = e.stderr.toString();
+  }
+
+  return failResponse(
+    `Exec command ${commandDesc} failed: ${e}`,
+    out,
+    err,
+    attachments
+  );
+}
+
 function successResponse(out, attachments = []) {
+  process.env = backupEnv;
+
   return {
     out,
     attachments,
@@ -102,6 +110,8 @@ function successResponse(out, attachments = []) {
 }
 
 function failResponse(reason, out, err, attachments = []) {
+  process.env = backupEnv;
+
   return {
     success: false,
     reason,
@@ -121,6 +131,9 @@ const exists = (p) => {
 };
 
 const runPlayLambda = async (event, context) => {
+  // We take a copy of the defaults on every run so that we can restore them
+  // This means "assumed" env variables dont lie around between runs.
+  backupEnv = process.env;
   const runDir = "/tmp/play-run";
 
   if (!exists(runDir)) {
