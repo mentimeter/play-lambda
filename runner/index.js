@@ -7,8 +7,6 @@ const mime = require("mime-types");
 const glob = require("glob");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
-let backupEnv = process.env;
-
 function initRunDir(runDir) {
   fs.mkdirSync(runDir);
   fs.symlinkSync(`${process.cwd()}/node_modules`, `${runDir}/node_modules`);
@@ -73,8 +71,6 @@ async function uploadAttachments(attachments) {
 }
 
 function execErrorResponse(commandDesc, e, attachments = []) {
-  process.env = backupEnv;
-
   console.log("error:");
   console.log(util.inspect(e, false, null, false));
   console.log("attachments:");
@@ -98,8 +94,6 @@ function execErrorResponse(commandDesc, e, attachments = []) {
 }
 
 function successResponse(out, attachments = []) {
-  process.env = backupEnv;
-
   return {
     out,
     attachments,
@@ -110,8 +104,6 @@ function successResponse(out, attachments = []) {
 }
 
 function failResponse(reason, out, err, attachments = []) {
-  process.env = backupEnv;
-
   return {
     success: false,
     reason,
@@ -131,9 +123,6 @@ const exists = (p) => {
 };
 
 const runPlayLambda = async (event, context) => {
-  // We take a copy of the defaults on every run so that we can restore them
-  // This means "assumed" env variables dont lie around between runs.
-  backupEnv = process.env;
   const runDir = "/tmp/play-run";
 
   if (!exists(runDir)) {
@@ -187,6 +176,14 @@ const runPlayLambda = async (event, context) => {
         execErr,
         attachments
       );
+    } finally {
+      // Delete "assumed" env variables so that they dont lie around between runs.
+      Object.keys(process.env)
+        .filter(
+          (key) => key.startsWith("E2E_") || key.startsWith("PLAY_LAMBDA_")
+        )
+        .forEach((filteredKey) => delete process.env[filteredKey]);
+      delete process.env.ENV;
     }
   } else {
     return failResponse("no command defined", event, "");
