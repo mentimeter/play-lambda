@@ -19,7 +19,7 @@ import { Runner } from "@playwright/test/lib/runner";
 import { register } from "esbuild-register/dist/node";
 import { extractResults } from "./resultParsing";
 import { findTests } from "./findTests";
-import https from 'https';
+import https from "https";
 
 // For optional aws access tokens
 dotenv.config();
@@ -351,9 +351,12 @@ export async function testCommand(args: any) {
 
   // maxSockets sets an upper bound on the number of concurrent requests
   const httpsAgent = new https.Agent({
-    maxSockets: Number(process.env["E2E_MAX_SOCKETS"]) ?? 100
+    maxSockets: Number(process.env["E2E_MAX_SOCKETS"]) ?? 100,
   });
-  const lambdaConfig: LambdaClientConfig = { region: "us-east-1" , requestHandler: new NodeHttpHandler({httpsAgent})};
+  const lambdaConfig: LambdaClientConfig = {
+    region: "us-east-1",
+    requestHandler: new NodeHttpHandler({ httpsAgent }),
+  };
   if (process.env["PLAY_LAMBDA_ACCESS_KEY"]) {
     lambdaConfig.credentials = {
       accessKeyId: process.env["PLAY_LAMBDA_ACCESS_KEY"],
