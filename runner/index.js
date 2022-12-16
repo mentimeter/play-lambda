@@ -154,49 +154,50 @@ const runPlayLambda = async (event, context) => {
   }
 
   let commandOut;
-  if (event.command) {
-    try {
-      const commandOutBuf = runCmd(event.command, {
-        cwd: runDir,
-      });
-      commandOut = commandOutBuf.toString();
-    } catch (execErr) {
-      // Completely failed tests have non-zero exit code but still have
-      // traces
-      let attachments = [];
-      try {
-        attachments = getAttachments(runDir);
-        await uploadAttachments(attachments);
-      } catch (error) {
-        return failResponse(`attachment upload error ${error}`, "", execErr);
-      }
-
-      return execErrorResponse(
-        `playwright command: ${event.command}`,
-        execErr,
-        attachments
-      );
-    } finally {
-      // Delete "assumed" env variables so that they dont lie around between runs.
-      Object.keys(process.env)
-        .filter(
-          (key) => key.startsWith("E2E_") || key.startsWith("PLAY_LAMBDA_")
-        )
-        .forEach((filteredKey) => delete process.env[filteredKey]);
-      delete process.env.ENV;
-    }
-  } else {
+  if (!event.command) {
     return failResponse("no command defined", event, "");
   }
 
-  // Flakey but successfull tests have attachments
-  const attachments = getAttachments(runDir);
   try {
-    await uploadAttachments(attachments);
-  } catch (error) {
-    return failResponse("s3 upload error", "", error);
+    const commandOutBuf = runCmd(event.command, {
+      cwd: runDir,
+    });
+    commandOut = commandOutBuf.toString();
+
+    // Flaky but successful tests have attachments
+    const attachments = getAttachments(runDir);
+    try {
+      await uploadAttachments(attachments);
+    } catch (error) {
+      return failResponse("s3 upload error", "", error);
+    }
+    return successResponse(commandOut, attachments);
+
+  } catch (execErr) {
+    // Completely failed tests have non-zero exit code but still have
+    // traces
+    let attachments = [];
+    try {
+      attachments = getAttachments(runDir);
+      await uploadAttachments(attachments);
+    } catch (error) {
+      return failResponse(`attachment upload error ${error}`, "", execErr);
+    }
+
+    return execErrorResponse(
+      `playwright command: ${event.command}`,
+      execErr,
+      attachments
+    );
+  } finally {
+    // Delete "assumed" env variables so that they dont lie around between runs.
+    Object.keys(process.env)
+      .filter(
+        (key) => key.startsWith("E2E_") || key.startsWith("PLAY_LAMBDA_")
+      )
+      .forEach((filteredKey) => delete process.env[filteredKey]);
+    delete process.env.ENV;
   }
-  return successResponse(commandOut, attachments);
 };
 
 module.exports.handler = async (event, context) => {
