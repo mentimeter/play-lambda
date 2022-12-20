@@ -24,6 +24,8 @@ import https from "https";
 // For optional aws access tokens
 dotenv.config();
 
+const defaultMaxSockets = 300;
+
 export interface TestConfig {
   filePatterns: string[];
   runsPerTest: number;
@@ -351,7 +353,7 @@ export async function testCommand(args: any) {
 
   // maxSockets sets an upper bound on the number of concurrent requests
   const httpsAgent = new https.Agent({
-    maxSockets: Number(process.env["E2E_MAX_SOCKETS"]) ?? 100,
+    maxSockets: Number(process.env["E2E_MAX_SOCKETS"]) ?? defaultMaxSockets,
   });
   const lambdaConfig: LambdaClientConfig = {
     region: "us-east-1",
