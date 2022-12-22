@@ -356,7 +356,7 @@ export async function testCommand(args: any) {
     maxSockets: Number(process.env["E2E_MAX_SOCKETS"]) ?? defaultMaxSockets,
   });
   const lambdaConfig: LambdaClientConfig = {
-    region: "us-east-1",
+    region: "eu-west-1",
     requestHandler: new NodeHttpHandler({ httpsAgent }),
   };
   if (process.env["PLAY_LAMBDA_ACCESS_KEY"]) {

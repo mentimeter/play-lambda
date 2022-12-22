@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
-  region: us-east-1
+  region: eu-west-1
   memorySize: 2048
   iamBucketReplace: true
   tags:
