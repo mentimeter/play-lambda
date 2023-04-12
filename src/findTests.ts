@@ -9,7 +9,7 @@ import type {
 import type { SuiteInfo, TestConfig } from "./testCommand";
 
 export async function findTests(config: TestConfig): Promise<SuiteInfo> {
-  let pwListRaw;
+  let pwListRaw: string;
 
   if (config.testListOverride) {
     pwListRaw = config.testListOverride;
@@ -91,7 +91,7 @@ export async function findTests(config: TestConfig): Promise<SuiteInfo> {
   // It's fun to let the user know that we are using lots of lambda functions!
   rootConfig.workers = allTests.length;
   listOutput.config.workers = allTests.length;
-  listOutput.config._maxConcurrentTestGroups = allTests.length;
+  listOutput.config._internal = {maxConcurrentTestGroups: allTests.length};
   rootConfig.__testGroupsCount = allTests.length;
   listOutput.config.__testGroupsCount = allTests.length;
 

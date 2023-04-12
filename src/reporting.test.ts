@@ -8,9 +8,10 @@ import {
   threeFailedRadioheadWikiTries,
 } from "./mocks/resultParsingResponseMocks";
 import { listExampleProject, listRadioheadWiki } from "./mocks/listProjectMock";
+import { LambdaClient } from "@aws-sdk/client-lambda";
 
 describe("playwright reporting", () => {
-  let lambdaClient;
+  let lambdaClient: Partial<LambdaClient>;
   let config: TestConfig;
   let mockReporter: Reporter;
   let onBegin: jest.Mock<any, any>;

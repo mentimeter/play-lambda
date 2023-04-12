@@ -15,7 +15,9 @@ import type {
 import dotenv from "dotenv";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
-import { Runner } from "@playwright/test/lib/runner";
+import { Runner } from "@playwright/test/lib/runner/runner";
+import { ConfigLoader } from "@playwright/test/lib/common/configLoader";
+import { createReporter } from "@playwright/test/lib/runner/reporters";
 import { register } from "esbuild-register/dist/node";
 import { extractResults } from "./resultParsing";
 import { findTests } from "./findTests";
@@ -177,28 +179,22 @@ async function getReporterFromConfig(
   // This function is the reason we need to patch playwright (for now)
   // The `Runner` class which lets us turn reporter: [['json']] type arguments
   // into actual reporter classes is internal to playwright.
-  const defaultConfig = {
-    reporter: [],
-  };
-  const reportCreatorRunner = new Runner({}, { defaultConfig });
-  const configFile = Runner.resolveConfigFile(configFilepath);
+  const defaultConfig = {};
+  const configLoader = new ConfigLoader(defaultConfig);
+  const config = await configLoader.loadConfigFile(configFilepath);
 
-  const loadedConfig = await reportCreatorRunner.loadConfigFromResolvedFile(
-    configFile
-  );
-
-  if (!loadedConfig.reporter) {
+  if (!config.reporter) {
     return null;
   }
 
-  const reporter = reportCreatorRunner._createReporter();
+  const reporter = createReporter(config);
 
   return reporter;
 }
 
 export async function runTests(
   config: TestConfig,
-  lambdaClient: LambdaClient,
+  lambdaClient: Partial<LambdaClient>,
   suppliedReporter: Reporter | null
 ): Promise<boolean> {
   let reporter: Reporter;
@@ -209,7 +205,7 @@ export async function runTests(
   }
 
   try {
-    // Optimistally remove previously downloaded results if they're hanging around
+    // Optimistically remove previously downloaded results if they're hanging around
     // It's the same behaviour as playwright + otherwise this dir get's pretty bloated!
     await fs.rm("test-results", { recursive: true });
   } catch (e) {
@@ -339,6 +335,8 @@ export async function runTests(
   // Some onEnds are async
   await Promise.all([
     reporter.onEnd?.(reportStatus),
+    // @ts-expect-error - onExit exists in the Multiplexer reporter
+    reporter.onExit?.(reportStatus),
     globalTeardown?.(playwrightConfig),
   ]);
 

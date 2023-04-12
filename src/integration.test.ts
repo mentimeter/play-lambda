@@ -23,7 +23,7 @@ describe("play-lambda integration suite", () => {
       runnerStage: "dev",
     };
 
-    let finishedResult;
+    let finishedResult: any;
     const reporter = {
       onEnd: (result: any) => {
         finishedResult = result;

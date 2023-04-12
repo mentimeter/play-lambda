@@ -23,6 +23,8 @@ const pwPackageString = fs.readFileSync(pwPackagePath).toString();
 
 const pwPackage = JSON.parse(pwPackageString);
 
-pwPackage.exports["./lib/runner"] = "./lib/runner.js";
+pwPackage.exports["./lib/runner/runner"] = "./lib/runner/runner.js";
+pwPackage.exports["./lib/runner/reporters"] = "./lib/runner/reporters.js";
+pwPackage.exports["./lib/common/configLoader"] = "./lib/common/configLoader.js";
 
 fs.writeFileSync(pwPackagePath, JSON.stringify(pwPackage, null, 2) + "\n");

@@ -9,7 +9,7 @@ function srcDir(): string {
   return path.join(__dirname, "..");
 }
 
-export async function deploy(args: any) {
+export async function deploy(args: any): Promise<void> {
   const tmpDir = path.join(process.cwd(), "lambda_deploy_dist");
   try {
     await fs.stat(tmpDir);
@@ -39,7 +39,7 @@ export async function deploy(args: any) {
   }
 
   console.log("Deploying play-runner lambda function");
-  let deployResult;
+  let deployResult: unknown;
   try {
     deployResult = await execCmd(
       `npx serverless@${serverlessVersion} deploy --stage ${args.stage}`,
@@ -53,7 +53,7 @@ export async function deploy(args: any) {
   console.log(deployResult);
 }
 
-async function createPackageJson(tmpDir: string) {
+async function createPackageJson(tmpDir: string): Promise<void> {
   const testPackage = require(`${process.cwd()}/package.json`);
   if (!testPackage.dependencies) {
     console.log(
@@ -84,7 +84,7 @@ async function createPackageJson(tmpDir: string) {
   );
 }
 
-async function copyServerlessConfig(tmpDir: string) {
+async function copyServerlessConfig(tmpDir: string): Promise<void> {
   let serverlessConfig = (
     await fs.readFile(`${srcDir()}/serverless.yml`)
   ).toString();
@@ -118,7 +118,7 @@ type CommandOptions = {
   cwd: string;
 } & ExecOptions;
 
-function execCmd(cmd: string, options: CommandOptions) {
+function execCmd(cmd: string, options: CommandOptions): Promise<unknown> {
   return new Promise((resolve, reject) => {
     exec(cmd, options, (error, stdout, stderr) => {
       if (error) {

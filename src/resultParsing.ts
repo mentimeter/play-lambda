@@ -1,10 +1,6 @@
 import { TextDecoder } from "util";
-import { createWriteStream, mkdirSync } from "fs";
-import { dirname, basename } from "path";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import type { InvokeCommandOutput } from "@aws-sdk/client-lambda";
-import type { TestCase, TestResult } from "@playwright/test/reporter";
-import path from "path";
+import type { TestResult } from "@playwright/test/reporter";
 
 export interface PlaywrightStatus {
   success: boolean;
@@ -42,6 +38,7 @@ export async function extractResults(
       stderr: [""],
       steps: [],
       errors: [],
+      parallelIndex: 0,
     },
   ];
 
@@ -139,11 +136,11 @@ function findFirstTests(commandOutput: TestSpecs): any {
   throw new Error(`no tests found in results ${commandOutput}`);
 }
 
-function replaceAttachmentPaths(bucketAttachments, results) {
+function replaceAttachmentPaths(bucketAttachments: any[], results: any) {
   for (const result of results) {
     for (const resultAttachment of result.attachments) {
       const bucketAttachment = bucketAttachments.find(
-        (att) => att.file === resultAttachment.path
+        (att: { file: any; }) => att.file === resultAttachment.path
       );
       if (bucketAttachment) {
         resultAttachment.path = bucketAttachment.bucketKey;
