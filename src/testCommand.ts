@@ -268,8 +268,15 @@ export async function runTests(
 
   reporter.onBegin?.(suiteInfo.config, suiteInfo.suite);
 
+  const staggerTime = process.env.PLAY_LAMBDA_STAGGER_TIME
+    ? parseInt(process.env.PLAY_LAMBDA_STAGGER_TIME, 10)
+    : 0;
+
   const invocations = [];
   for (const test of suiteInfo.suite.allTests()) {
+    // optional staggering to reduce the amount of up-front load
+    await new Promise((resolve) => setTimeout(resolve, staggerTime));
+
     // The search term is the concatenation of the test filename, all
     // `describe` titles and the title of the test itself. This is to ensure
     // that we get unique hits for tests with the same title string.
