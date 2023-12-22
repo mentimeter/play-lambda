@@ -1,3 +1,5 @@
+**Deprecated! - Use [Azure Playwright Testing](https://azure.microsoft.com/en-us/products/playwright-testing/) for something similar**
+
 # `play-lambda` - Playwright tests in lambda functions.
 
 Run your entire playwright test suite in aws lambda functions! `play-lambda` runs all your tests in browsers in parallel. E2E suites that used to take hours can take minutes!
